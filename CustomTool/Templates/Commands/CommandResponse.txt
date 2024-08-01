@@ -1,0 +1,8 @@
+namespace {{projectname}}.Application.Features.Commands.{{command}}
+{
+    public record {{command}}CommandResponse
+    {
+        // add fields here
+        // public required string Property { get; set; } = string.Empty;
+    }
+}

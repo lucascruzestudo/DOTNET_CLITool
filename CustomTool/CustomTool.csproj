@@ -8,7 +8,13 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>customtool</ToolCommandName>
   </PropertyGroup>
+  
 <ItemGroup>
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta1" />
-  </ItemGroup>
+    <EmbeddedResource Include="Templates/Commands/Command.txt" />
+    <EmbeddedResource Include="Templates/Commands/CommandHandler.txt" />
+    <EmbeddedResource Include="Templates/Commands/CommandRequest.txt" />
+    <EmbeddedResource Include="Templates/Commands/CommandResponse.txt" />
+    <EmbeddedResource Include="Templates/Commands/CommandValidator.txt" />
+  </ItemGroup>  
 </Project>

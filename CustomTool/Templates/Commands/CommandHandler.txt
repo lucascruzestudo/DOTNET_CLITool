@@ -1,0 +1,48 @@
+﻿using {{projectname}}.Application.Common.Interfaces;
+using {{projectname}}.Domain.Notifications;
+
+namespace {{projectname}}.Application.Features.Commands.{{command}}
+{
+    public class {{command}}CommandHandler : IRequestHandler<{{command}}Command, {{command}}CommandResponse?>
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMediator _mediator;
+
+        public {{command}}CommandHandler(IUnitOfWork unitOfWork, IMediator mediator)
+        {
+            _unitOfWork = unitOfWork;
+            _mediator = mediator;
+        }
+
+        public async Task<{{command}}CommandResponse?> Handle({{command}}Command request, CancellationToken cancellationToken)
+        {
+            if (await ValidateBusinessRules(request.{{command}}CommandRequest))
+            {
+                _unitOfWork.Commit();
+
+                await _mediator.Publish(new DomainSuccesNotification("{{command}}", "Operation successful"), cancellationToken);
+
+                // Create and return response
+                var response = new {{command}}CommandResponse
+                {
+                    // Fill response properties as needed
+                };
+
+                return response;
+            }
+            else
+            {
+                return default;
+            }
+        }
+
+        private async Task<bool> ValidateBusinessRules({{command}}CommandRequest request)
+        {
+            bool isValid = true;
+
+            // Add validation logic here
+
+            return isValid;
+        }
+    }
+}

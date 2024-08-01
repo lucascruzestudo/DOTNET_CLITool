@@ -1,0 +1,13 @@
+namespace {{projectname}}.Application.Features.Commands.{{command}}
+{
+    public class {{command}}CommandValidator : AbstractValidator<{{command}}Command>
+    {
+        public {{command}}CommandValidator()
+        {
+            //RuleFor(x => x.{{command}}CommandRequest.Property)
+            //    .NotEmpty().WithMessage("{PropertyName} is required.")
+            //    .NotNull()
+            //    .MaximumLength(50).WithMessage("{PropertyName} must not exceed 50 characters.");
+        }
+    }
+}
