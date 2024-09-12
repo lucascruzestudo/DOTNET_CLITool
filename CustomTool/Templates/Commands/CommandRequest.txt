@@ -1,9 +1,6 @@
-﻿namespace {{projectname}}.Application.Features.Commands.{{command}}
-{
-    public record {{command}}CommandRequest
-    {
-        // add fields here
-        // public required string Property { get; set; } = string.Empty;
+﻿namespace {{projectname}}.Application.Features.Commands.{{command}};
 
-    }
+public record {{command}}CommandRequest
+{
+    // public required string Property { get; set; } = string.Empty;
 }
