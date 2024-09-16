@@ -4,7 +4,7 @@ public class {{command}}CommandValidator : AbstractValidator<{{command}}Command>
 {
     public {{command}}CommandValidator()
     {
-        //RuleFor(x => x.{{command}}CommandRequest.Property)
-        //    .NotEmpty().WithMessage("{PropertyName} is required.");
+        RuleFor(x => x.Request.Property)
+            .NotEmpty().WithMessage("{PropertyName} is required.");
     }
 }

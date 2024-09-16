@@ -16,9 +16,9 @@ public class {{command}}CommandHandler : IRequestHandler<{{command}}Command, {{c
     public async Task<{{command}}CommandResponse?> Handle({{command}}Command request, CancellationToken cancellationToken)
     {
 
-            _unitOfWork.Commit();
-            await _mediator.Publish(new DomainSuccesNotification("{{command}}", "Operation successful"), cancellationToken);
-            var response = new {{command}}CommandResponse { };
-            return response;    
+        _unitOfWork.Commit();
+        await _mediator.Publish(new DomainSuccesNotification("{{command}}", "Operation successful"), cancellationToken);
+        var response = new {{command}}CommandResponse { };
+        return response;    
     }
 }

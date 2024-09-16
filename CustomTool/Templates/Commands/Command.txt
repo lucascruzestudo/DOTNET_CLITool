@@ -4,9 +4,9 @@ namespace {{projectname}}.Application.Features.Commands.{{command}};
 
 public class {{command}}Command : Command<{{command}}CommandResponse>
 {
-    public {{command}}CommandRequest {{command}}CommandRequest { get; set; }
+    public {{command}}CommandRequest Request { get; set; }
     public {{command}}Command({{command}}CommandRequest request)
     {
-        {{command}}CommandRequest = request;
+        Request = request;
     }
 }

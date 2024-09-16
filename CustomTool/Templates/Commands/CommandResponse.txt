@@ -2,5 +2,6 @@ namespace {{projectname}}.Application.Features.Commands.{{command}};
 
 public record {{command}}CommandResponse
 {
-    // public required string Property { get; set; } = string.Empty;
+    public string Property { get; set; } = string.Empty;
+    public long Property2 { get; set; } = 0;
 }
