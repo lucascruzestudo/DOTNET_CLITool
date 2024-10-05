@@ -1,0 +1,7 @@
+using {{projectname}}.Domain.Entities;
+
+namespace {{projectname}}.Domain.Interfaces.Data.Repositories
+
+public interface I{{entityname}}Repository : IRepositoryBase<{{entityname}}>
+{
+}

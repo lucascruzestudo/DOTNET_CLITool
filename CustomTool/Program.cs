@@ -1,9 +1,9 @@
 ﻿using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
-using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
+using CustomTool.Commands;
+using CustomTool.Resources;
 
 class Program
 {
@@ -11,9 +11,10 @@ class Program
     {
         var rootCommand = new RootCommand("Custom tool for generating commands");
 
-        var newCommand = new Command("new", "Creates a new command");
+        var newCommand = new Command("new", "Creates a new item");
         rootCommand.Add(newCommand);
 
+        // Command for generating application commands
         var commandCommand = new Command("command", "Creates a new command")
         {
             new Option<string>(new[] { "-c", "--command" }, "Command name"),
@@ -25,99 +26,43 @@ class Program
         {
             if (string.IsNullOrEmpty(command) || string.IsNullOrEmpty(project) || string.IsNullOrEmpty(output))
             {
-                Console.WriteLine("Command, project names, and output directory are required.");
+                Console.WriteLine("Command, project names, and output directory are required. Use -c, -p, -o parameters.");
                 return Task.FromResult(1);
             }
 
-            CreateCommand(command, project, output);
+            var resourceManager = new ResourceManager();
+            var commandCreator = new CommandCreator(resourceManager);
+            commandCreator.CreateCommand(command, project, output);
+
             return Task.FromResult(0);
         });
-
         newCommand.AddCommand(commandCommand);
+
+        // Command for generating repository and interface
+        var repositoryCommand = new Command("repository", "Creates a new repository and interface")
+        {
+            new Option<string>(new[] { "-e", "--entity" }, "Entity name"),
+            new Option<string>(new[] { "-p", "--project" }, "Project name"),
+            new Option<string>(new[] { "-o", "--output" }, "Repository class output directory"),
+            new Option<string>(new[] { "-io", "--interfaceoutput" }, "Interface output directory")
+        };
+
+        repositoryCommand.Handler = CommandHandler.Create<string, string, string, string>((entity, project, output, interfaceoutput) =>
+        {
+            if (string.IsNullOrEmpty(entity) || string.IsNullOrEmpty(project) || string.IsNullOrEmpty(output) || string.IsNullOrEmpty(interfaceoutput))
+            {
+                Console.WriteLine("Entity name, project name, repository output, and interface output directory are required. Use -e, -p, -o, -io parameters.");
+                return Task.FromResult(1);
+            }
+
+            var resourceManager = new ResourceManager();
+            var repositoryCreator = new RepositoryCreator(resourceManager);
+            repositoryCreator.CreateRepositoryWithInterface(entity, project, output, interfaceoutput);
+
+            return Task.FromResult(0);
+        });
+        newCommand.AddCommand(repositoryCommand);
 
         return await rootCommand.InvokeAsync(args);
     }
-
-    static void CreateCommand(string command, string project, string output)
-{
-    // Ensure the base output directory exists
-    string outputDir = Path.GetDirectoryName(output);
-    if (!Directory.Exists(outputDir))
-    {
-        Directory.CreateDirectory(outputDir);
-    }
-
-    // Create a subdirectory named after the command
-    string commandDir = Path.Combine(outputDir, command);
-    if (!Directory.Exists(commandDir))
-    {
-        Directory.CreateDirectory(commandDir);
-    }
-
-    // List of templates and their output names
-    var templates = new Dictionary<string, string>
-    {
-        { "Templates.Commands.Command.txt", $"{command}Command.cs" },
-        { "Templates.Commands.CommandHandler.txt", $"{command}CommandHandler.cs" },
-        { "Templates.Commands.CommandRequest.txt", $"{command}CommandRequest.cs" },
-        { "Templates.Commands.CommandResponse.txt", $"{command}CommandResponse.cs" },
-        { "Templates.Commands.CommandValidator.txt", $"{command}CommandValidator.cs" }
-    };
-
-    foreach (var template in templates)
-    {
-        string templateFile = template.Key;
-        string fileName = template.Value;
-
-        string templateContent = GetEmbeddedResource(templateFile);
-        if (string.IsNullOrEmpty(templateContent))
-        {
-            Console.WriteLine($"Could not read the template {templateFile}.");
-            continue;
-        }
-
-        string content = templateContent.Replace("{{command}}", command)
-                                         .Replace("{{projectname}}", project);
-
-        string filePath = Path.Combine(commandDir, fileName);
-
-        // Write the content to the file
-        try
-        {
-            File.WriteAllText(filePath, content);
-            Console.WriteLine($"File created at {filePath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to write file '{filePath}': {ex.Message}");
-        }
-    }
-}
-
-    static string GetEmbeddedResource(string resourcePath)
-{
-    var assembly = Assembly.GetExecutingAssembly();
-    var resourceName = ConstructResourceName(resourcePath);
-
-    using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-    {
-        if (stream == null)
-        {
-            Console.WriteLine($"Resource '{resourceName}' not found.");
-            return null;
-        }
-        using (StreamReader reader = new StreamReader(stream))
-        {
-            return reader.ReadToEnd();
-        }
-    }
-}
-
-static string ConstructResourceName(string resourcePath)
-{
-    var assembly = Assembly.GetExecutingAssembly();
-    var assemblyName = assembly.GetName().Name;
-
-    return $"{assemblyName}.{resourcePath.Replace('\\', '.').Replace('/', '.')}";
-}
 }

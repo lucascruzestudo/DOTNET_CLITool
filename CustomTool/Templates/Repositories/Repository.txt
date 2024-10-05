@@ -1,0 +1,11 @@
+using {{projectname}}.Domain.Entities; 
+using {{projectname}}.Domain.Interfaces.Data.Repositories;
+
+namespace {{projectname}}.Infrastructure.Data.Repositories
+
+public class {{entityname}}Repository : RepositoryBase<{{entityname}}>, I{{entityname}}Repository
+{
+    public {{entityname}}Repository(ApplicationDbContext dbContext) : base(dbContext) 
+    {
+    }
+}
